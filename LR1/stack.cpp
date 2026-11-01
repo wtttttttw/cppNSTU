@@ -33,7 +33,6 @@ string MyStack::peek() {
     return data[size - 1];
 }
 
-// <-- ДОБАВЛЕНО: Вывод от вершины к дну
 void MyStack::print() {
     if (size == 0) {
         cout << "-> EMPTY" << endl;
