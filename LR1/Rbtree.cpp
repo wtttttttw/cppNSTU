@@ -97,7 +97,8 @@ bool RBTree::find(string key) {
     return false;
 }
 
-Node* RBTree::minimum(Node* node) {
+// ИСПРАВЛЕНИЕ: добавили RBTree:: перед типом Node в возвращаемом значении
+RBTree::Node* RBTree::minimum(Node* node) {
     while (node->left) node = node->left;
     return node;
 }
