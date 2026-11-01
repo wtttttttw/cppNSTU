@@ -97,7 +97,6 @@ bool RBTree::find(string key) {
     return false;
 }
 
-// ИСПРАВЛЕНИЕ: добавили RBTree:: перед типом Node в возвращаемом значении
 RBTree::Node* RBTree::minimum(Node* node) {
     while (node->left) node = node->left;
     return node;
@@ -213,10 +212,12 @@ void RBTree::savePreOrderHelper(Node* node, string& out) {
 
 void RBTree::savePreOrder(string& out) { savePreOrderHelper(root, out); }
 
+// ИЗМЕНЕНО: Добавлен вывод цвета
 void RBTree::printHelper(Node* node) {
     if (!node) return;
     printHelper(node->left);
-    cout << node->key << " ";
+    // Выводим ключ и букву цвета (R - красный, B - черный)
+    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
     printHelper(node->right);
 }
 
