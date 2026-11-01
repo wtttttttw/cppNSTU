@@ -1,0 +1,86 @@
+#include "linkedList.h"
+#include <iostream>
+
+ForwardList::ForwardList() : head(nullptr) {}
+ForwardList::~ForwardList() { create(); }
+
+void ForwardList::create() {
+    while (head != nullptr) {
+        Node* tmp = head;
+        head = head->next;
+        delete tmp;
+    }
+}
+
+void ForwardList::push_front(string val) {
+    Node* newNode = new Node(val);
+    newNode->next = head;
+    head = newNode;
+}
+
+void ForwardList::push_back(string val) {
+    Node* newNode = new Node(val);
+    if (!head) { head = newNode; return; }
+    Node* cur = head;
+    while (cur->next) cur = cur->next;
+    cur->next = newNode;
+}
+
+void ForwardList::insert_after(string target, string val) {
+    Node* cur = head;
+    while (cur && cur->value != target) cur = cur->next;
+    if (cur) {
+        Node* newNode = new Node(val);
+        newNode->next = cur->next;
+        cur->next = newNode;
+    }
+}
+
+void ForwardList::insert_before(string target, string val) {
+    if (!head) return;
+    if (head->value == target) { push_front(val); return; }
+    Node* cur = head;
+    while (cur->next && cur->next->value != target) cur = cur->next;
+    if (cur->next) {
+        Node* newNode = new Node(val);
+        newNode->next = cur->next;
+        cur->next = newNode;
+    }
+}
+
+void ForwardList::remove(string val) {
+    if (!head) return;
+    if (head->value == val) {
+        Node* tmp = head;
+        head = head->next;
+        delete tmp;
+        return;
+    }
+    Node* cur = head;
+    while (cur->next && cur->next->value != val) cur = cur->next;
+    if (cur->next) {
+        Node* tmp = cur->next;
+        cur->next = tmp->next;
+        delete tmp;
+    }
+}
+
+bool ForwardList::find(string val) {
+    Node* cur = head;
+    while (cur) {
+        if (cur->value == val) return true;
+        cur = cur->next;
+    }
+    return false;
+}
+
+void ForwardList::print() {
+    Node* cur = head;
+    if (!cur) { cout << "-> EMPTY" << endl; return; }
+    cout << "-> ";
+    while (cur) {
+        cout << cur->value << " ";
+        cur = cur->next;
+    }
+    cout << endl;
+}
