@@ -31,6 +31,12 @@ public:
         for (auto& p : trees) { delete p.second; }
     }
 
+    // Вспомогательный метод для доступа к дереву извне (для сохранения)
+    RBTree* getTree(string name) {
+        if (trees.count(name)) return trees[name];
+        return nullptr;
+    }
+
     void executeQuery(const string& query) {
         stringstream ss(query);
         string cmd, name, arg1, arg2;
@@ -40,7 +46,7 @@ public:
         char type = cmd[0];
         string action = cmd.substr(1);
 
-        // --- ������ ---
+        // --- МАССИВ ---
         if (type == 'M') {
             if (!arrays[name]) arrays[name] = new MyArray();
             MyArray* arr = arrays[name];
@@ -52,7 +58,7 @@ public:
             else if (action == "SET") arr->set(stoi(arg1), arg2);
             else if (action == "LEN") cout << "-> " << arr->length() << endl;
         }
-        // --- ����������� ������ ---
+        // --- ОДНОСВЯЗНЫЙ СПИСОК ---
         else if (type == 'F') {
             if (!flists[name]) flists[name] = new ForwardList();
             ForwardList* fl = flists[name];
@@ -68,7 +74,7 @@ public:
             else if (action == "GETFIRST") cout << "-> " << fl->get_first() << endl;
             else if (action == "GETLAST") cout << "-> " << fl->get_last() << endl;
         }
-        // --- ���������� ������ ---
+        // --- ДВУСВЯЗНЫЙ СПИСОК ---
         else if (type == 'L') {
             if (!dlists[name]) dlists[name] = new DoubleList();
             DoubleList* dl = dlists[name];
@@ -84,25 +90,25 @@ public:
             else if (action == "GETFIRST") cout << "-> " << dl->get_first() << endl;
             else if (action == "GETLAST") cout << "-> " << dl->get_last() << endl;
         }
-        // --- ���� ---
+        // --- СТЕК ---
         else if (type == 'S') {
             if (!stacks[name]) stacks[name] = new MyStack();
             MyStack* st = stacks[name];
             if (action == "CREATE") st->create();
             else if (action == "PUSH") st->push(arg1);
             else if (action == "POP") cout << "-> " << st->pop() << endl;
-            else if (action == "GET") cout << "-> " << st->peek() << endl; // SGET
+            else if (action == "GET") cout << "-> " << st->peek() << endl;
         }
-        // --- ������� ---
+        // --- ОЧЕРЕДЬ ---
         else if (type == 'Q') {
             if (!queues[name]) queues[name] = new MyQueue();
             MyQueue* q = queues[name];
             if (action == "CREATE") q->create();
             else if (action == "PUSH") q->push(arg1);
             else if (action == "POP") cout << "-> " << q->pop() << endl;
-            else if (action == "GET") cout << "-> " << q->peek() << endl; // QGET
+            else if (action == "GET") cout << "-> " << q->peek() << endl;
         }
-        // --- ������ ---
+        // --- ДЕРЕВО ---
         else if (type == 'T') {
             if (!trees[name]) trees[name] = new RBTree();
             RBTree* t = trees[name];
@@ -142,17 +148,22 @@ int main(int argc, char* argv[]) {
 
     DBMS db;
 
+    // Загрузка из файла
     if (!filename.empty()) {
         ifstream file(filename);
         string line;
         while (getline(file, line)) {
             if (!line.empty()) {
+                // Если это сохранение дерева (TINSERT имя ключ1 цвет1 ключ2 цвет2...)
                 if (line.find("TINSERT") == 0) {
                     stringstream ss(line);
                     string c, n;
                     ss >> c >> n;
                     string key, color;
-                    while (ss >> key >> color) db.executeQuery("TINSERT " + n + " " + key);
+                    // Просто вставляем ключи по порядку, дерево само восстановит баланс
+                    while (ss >> key >> color) {
+                        db.executeQuery("TINSERT " + n + " " + key);
+                    }
                 } else {
                     db.executeQuery(line);
                 }
@@ -161,13 +172,40 @@ int main(int argc, char* argv[]) {
         file.close();
     }
 
+    // Выполнение запроса пользователя
     if (!query.empty()) {
         db.executeQuery(query);
-
+        
+        // Сохранение в файл
         if (!filename.empty()) {
-            ofstream file(filename, ios::app);
-            file << query << endl;
-            file.close();
+            // Проверяем, является ли команда "читающей" (не изменяет данные)
+            bool isReadOnly = (query.find("PRINT") == 0 || 
+                               query.find("GET") != string::npos || 
+                               query.find("LEN") != string::npos ||
+                               query.find("POP") != string::npos);
+
+            // Если команда изменяет структуру, сохраняем её
+            if (!isReadOnly) {
+                if (query[0] == 'T') {
+                    // Для дерева мы не сохраняем саму команду, а сохраняем ВСЁ дерево целиком
+                    stringstream ss(query);
+                    string c, n;
+                    ss >> c >> n;
+                    RBTree* tree = db.getTree(n);
+                    
+                    if (tree != nullptr) {
+                        string out = "";
+                        tree->savePreOrder(out);
+                        ofstream file(filename, ios::app);
+                        file << "TINSERT " << n << " " << out << endl;
+                        file.close();
+                    }
+                } else {
+                    ofstream file(filename, ios::app);
+                    file << query << endl;
+                    file.close();
+                }
+            }
         }
     }
 
