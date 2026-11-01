@@ -31,7 +31,7 @@ public:
         for (auto& p : trees) { delete p.second; }
     }
 
-    // Вспомогательный метод для доступа к дереву извне
+    // Вспомогательный метод для доступа к дереву извне (для сохранения)
     RBTree* getTree(string name) {
         if (trees.count(name)) return trees[name];
         return nullptr;
@@ -117,7 +117,7 @@ public:
             else if (action == "GET") cout << "-> " << (t->find(arg1) ? "TRUE" : "FALSE") << endl;
             else if (action == "DEL") t->remove(arg1);
         }
-        // --- PRINT (ВНИМАНИЕ НА ЭТОТ БЛОК) ---
+        // --- PRINT ---
         else if (cmd == "PRINT") {
             if (arrays.count(name) && arrays[name]) {
                 MyArray* arr = arrays[name];
@@ -154,11 +154,13 @@ int main(int argc, char* argv[]) {
         string line;
         while (getline(file, line)) {
             if (!line.empty()) {
+                // Если это сохранение дерева (TINSERT имя ключ1 цвет1 ключ2 цвет2...)
                 if (line.find("TINSERT") == 0) {
                     stringstream ss(line);
                     string c, n;
                     ss >> c >> n;
                     string key, color;
+                    // Восстанавливаем дерево последовательной вставкой ключей
                     while (ss >> key >> color) {
                         db.executeQuery("TINSERT " + n + " " + key);
                     }
@@ -174,16 +176,18 @@ int main(int argc, char* argv[]) {
     if (!query.empty()) {
         db.executeQuery(query);
         
-        // Сохранение в файл ТОЛЬКО изменяющих команд
+        // Сохранение в файл
         if (!filename.empty()) {
+            // Проверяем, является ли команда "читающей" (не изменяет данные)
             bool isReadOnly = (query.find("PRINT") == 0 || 
                                query.find("GET") != string::npos || 
                                query.find("LEN") != string::npos ||
                                query.find("POP") != string::npos);
 
+            // Если команда изменяет структуру, сохраняем её
             if (!isReadOnly) {
-                ofstream file(filename, ios::app);
                 if (query[0] == 'T') {
+                    // Для дерева сохраняем ВСЁ его состояние в виде ключ-цвет
                     stringstream ss(query);
                     string c, n;
                     ss >> c >> n;
@@ -191,13 +195,18 @@ int main(int argc, char* argv[]) {
                     
                     if (tree != nullptr) {
                         string out = "";
-                        tree->savePreOrder(out);
+                        tree->savePreOrder(out); // Получаем строку вида "key1 R key2 B ..."
+                        
+                        ofstream file(filename, ios::app);
                         file << "TINSERT " << n << " " << out << endl;
+                        file.close();
                     }
                 } else {
+                    // Для остальных структур просто дописываем команду
+                    ofstream file(filename, ios::app);
                     file << query << endl;
+                    file.close();
                 }
-                file.close();
             }
         }
     }
