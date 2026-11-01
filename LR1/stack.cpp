@@ -1,4 +1,5 @@
 #include "stack.h"
+#include <iostream>
 
 MyStack::MyStack() : data(nullptr), size(0), capacity(0) {}
 MyStack::~MyStack() { if (data) delete[] data; }
@@ -30,4 +31,17 @@ string MyStack::pop() {
 string MyStack::peek() {
     if (size == 0) return "EMPTY";
     return data[size - 1];
+}
+
+// <-- ДОБАВЛЕНО: Вывод от вершины к дну
+void MyStack::print() {
+    if (size == 0) {
+        cout << "-> EMPTY" << endl;
+        return;
+    }
+    cout << "-> ";
+    for (int i = size - 1; i >= 0; i--) {
+        cout << data[i] << " ";
+    }
+    cout << endl;
 }
