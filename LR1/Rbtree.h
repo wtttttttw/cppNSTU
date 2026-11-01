@@ -21,7 +21,9 @@ private:
     void fixInsert(Node* z);
     void fixDelete(Node* x);
     void rbTransplant(Node* u, Node* v);
+    
     Node* minimum(Node* node);
+    
     void destroyTree(Node* node);
     void savePreOrderHelper(Node* node, string& out);
     void printHelper(Node* node);
