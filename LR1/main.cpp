@@ -117,7 +117,7 @@ public:
             else if (action == "GET") cout << "-> " << (t->find(arg1) ? "TRUE" : "FALSE") << endl;
             else if (action == "DEL") t->remove(arg1);
         }
-        // --- PRINT ---
+       // --- PRINT ---
         else if (cmd == "PRINT") {
             if (arrays.count(name) && arrays[name]) {
                 MyArray* arr = arrays[name];
@@ -128,10 +128,9 @@ public:
             else if (flists.count(name) && flists[name]) flists[name]->print();
             else if (dlists.count(name) && dlists[name]) dlists[name]->print();
             else if (trees.count(name) && trees[name]) trees[name]->print();
+            else if (stacks.count(name) && stacks[name]) stacks[name]->print();
+            else if (queues.count(name) && queues[name]) queues[name]->print();
             else cout << "-> NOT FOUND or not supported for PRINT" << endl;
-        }
-        else {
-            cout << "Unknown command: " << cmd << endl;
         }
     }
 };
