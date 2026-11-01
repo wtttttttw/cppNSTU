@@ -1,0 +1,5 @@
+QPUSH queue 1
+QPUSH queue 2
+QPUSH queue 3
+QPUSH queue 4
+QPOP queue
