@@ -84,3 +84,15 @@ void ForwardList::print() {
     }
     cout << endl;
 }
+
+string ForwardList::get_first() {
+    if (!head) return "EMPTY";
+    return head->value;
+}
+
+string ForwardList::get_last() {
+    if (!head) return "EMPTY";
+    Node* cur = head;
+    while (cur->next) cur = cur->next;
+    return cur->value;
+}

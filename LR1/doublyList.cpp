@@ -89,3 +89,13 @@ void DoubleList::print() {
     }
     cout << endl;
 }
+
+string DoubleList::get_first() {
+    if (!head) return "EMPTY";
+    return head->value;
+}
+
+string DoubleList::get_last() {
+    if (!tail) return "EMPTY";
+    return tail->value;
+}

@@ -40,6 +40,7 @@ public:
         char type = cmd[0];
         string action = cmd.substr(1);
 
+        // --- ÌÀÑÑÈÂ ---
         if (type == 'M') {
             if (!arrays[name]) arrays[name] = new MyArray();
             MyArray* arr = arrays[name];
@@ -51,6 +52,7 @@ public:
             else if (action == "SET") arr->set(stoi(arg1), arg2);
             else if (action == "LEN") cout << "-> " << arr->length() << endl;
         }
+        // --- ÎÄÍÎÑÂßÇÍÛÉ ÑÏÈÑÎÊ ---
         else if (type == 'F') {
             if (!flists[name]) flists[name] = new ForwardList();
             ForwardList* fl = flists[name];
@@ -63,7 +65,10 @@ public:
             else if (action == "INSERTBEFORE") fl->insert_before(arg1, arg2);
             else if (action == "DEL") fl->remove(arg1);
             else if (action == "GET") cout << "-> " << (fl->find(arg1) ? "TRUE" : "FALSE") << endl;
+            else if (action == "GETFIRST") cout << "-> " << fl->get_first() << endl;
+            else if (action == "GETLAST") cout << "-> " << fl->get_last() << endl;
         }
+        // --- ÄÂÓÑÂßÇÍÛÉ ÑÏÈÑÎÊ ---
         else if (type == 'L') {
             if (!dlists[name]) dlists[name] = new DoubleList();
             DoubleList* dl = dlists[name];
@@ -76,23 +81,28 @@ public:
             else if (action == "INSERTBEFORE") dl->insert_before(arg1, arg2);
             else if (action == "DEL") dl->remove(arg1);
             else if (action == "GET") cout << "-> " << (dl->find(arg1) ? "TRUE" : "FALSE") << endl;
+            else if (action == "GETFIRST") cout << "-> " << dl->get_first() << endl;
+            else if (action == "GETLAST") cout << "-> " << dl->get_last() << endl;
         }
+        // --- ÑÒÅÊ ---
         else if (type == 'S') {
             if (!stacks[name]) stacks[name] = new MyStack();
             MyStack* st = stacks[name];
             if (action == "CREATE") st->create();
             else if (action == "PUSH") st->push(arg1);
             else if (action == "POP") cout << "-> " << st->pop() << endl;
-            else if (action == "GET") cout << "-> " << st->peek() << endl;
+            else if (action == "GET") cout << "-> " << st->peek() << endl; // SGET
         }
+        // --- Î×ÅÐÅÄÜ ---
         else if (type == 'Q') {
             if (!queues[name]) queues[name] = new MyQueue();
             MyQueue* q = queues[name];
             if (action == "CREATE") q->create();
             else if (action == "PUSH") q->push(arg1);
             else if (action == "POP") cout << "-> " << q->pop() << endl;
-            else if (action == "GET") cout << "-> " << q->peek() << endl;
+            else if (action == "GET") cout << "-> " << q->peek() << endl; // QGET
         }
+        // --- ÄÅÐÅÂÎ ---
         else if (type == 'T') {
             if (!trees[name]) trees[name] = new RBTree();
             RBTree* t = trees[name];
@@ -101,6 +111,7 @@ public:
             else if (action == "GET") cout << "-> " << (t->find(arg1) ? "TRUE" : "FALSE") << endl;
             else if (action == "DEL") t->remove(arg1);
         }
+        // --- PRINT ---
         else if (cmd == "PRINT") {
             if (arrays.count(name) && arrays[name]) {
                 MyArray* arr = arrays[name];
