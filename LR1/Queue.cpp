@@ -1,4 +1,5 @@
 #include "Queue.h"
+#include <iostream>
 
 MyQueue::MyQueue() : data(nullptr), head(0), tail(0), capacity(0) {}
 MyQueue::~MyQueue() { if (data) delete[] data; }
@@ -33,4 +34,17 @@ string MyQueue::pop() {
 string MyQueue::peek() {
     if (head == tail) return "EMPTY";
     return data[head];
+}
+
+// <-- ДОБАВЛЕНО: Вывод от головы к хвосту
+void MyQueue::print() {
+    if (head == tail) {
+        cout << "-> EMPTY" << endl;
+        return;
+    }
+    cout << "-> ";
+    for (int i = head; i < tail; i++) {
+        cout << data[i] << " ";
+    }
+    cout << endl;
 }
