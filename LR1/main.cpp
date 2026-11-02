@@ -142,7 +142,6 @@ public:
             else cout << "-> NOT FOUND or not supported for PRINT" << endl;
         }
 
-        // Если команда изменила структуру - сохраняем её в историю
         if (isModified) {
             history.push_back(query);
         }
@@ -176,15 +175,13 @@ int main(int argc, char* argv[]) {
         string line;
         while (getline(file, line)) {
             if (!line.empty()) {
-                // Выполняем без вывода на экран (printResult = false),
-                // но isModified сработает, и команда попадет в history!
                 db.executeQuery(line, false); 
             }
         }
         file.close();
     }
 
-    // Выполнение запроса пользователя (с выводом на экран)
+    // Выполнение запроса пользователя
     if (!query.empty()) {
         db.executeQuery(query, true);
     }
