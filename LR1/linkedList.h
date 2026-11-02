@@ -22,9 +22,7 @@ public:
     void insert_before(string target, string val);
     void remove(string val);
     bool find(string val);
-
-    // Несколько способов чтения
-    void print();       // Вывод всего списка
-    string get_first(); // Чтение головы
-    string get_last();  // Чтение хвоста
+    void print();
+    string get_first();
+    string get_last();
 };
