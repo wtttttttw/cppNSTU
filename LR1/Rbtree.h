@@ -25,7 +25,9 @@ private:
     void destroyTree(Node* node);
     void savePreOrderHelper(Node* node, string& out);
     
-    void printHelper(Node* node, int space);
+    void preOrderHelper(Node* node);
+    void inOrderHelper(Node* node);
+    void postOrderHelper(Node* node);
 
 public:
     RBTree();
@@ -36,5 +38,8 @@ public:
     bool find(string key);
     void remove(string key);
     void savePreOrder(string& out);
-    void print();
+    
+    void printPreOrder();
+    void printInOrder();
+    void printPostOrder();
 };

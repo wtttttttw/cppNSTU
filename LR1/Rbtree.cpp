@@ -74,24 +74,29 @@ void RBTree::insert(string key) {
     Node* z = new Node(key, RED);
     Node* y = nullptr;
     Node* x = root;
+    int numKey = stoi(key); 
+    
     while (x != nullptr) {
         y = x;
-        if (z->key < x->key) x = x->left;
-        else if (z->key > x->key) x = x->right;
+        int numX = stoi(x->key);
+        if (numKey < numX) x = x->left;
+        else if (numKey > numX) x = x->right;
         else { delete z; return; }
     }
     z->parent = y;
     if (!y) root = z;
-    else if (z->key < y->key) y->left = z;
+    else if (numKey < stoi(y->key)) y->left = z;
     else y->right = z;
     fixInsert(z);
 }
 
 bool RBTree::find(string key) {
     Node* cur = root;
+    int numKey = stoi(key);
     while (cur) {
-        if (cur->key == key) return true;
-        if (key < cur->key) cur = cur->left;
+        int numCur = stoi(cur->key);
+        if (numCur == numKey) return true;
+        if (numKey < numCur) cur = cur->left;
         else cur = cur->right;
     }
     return false;
@@ -164,10 +169,12 @@ void RBTree::fixDelete(Node* x) {
     if (x) x->color = BLACK;
 }
 
+// ИЗМЕНЕНО: Удаление с поиском как чисел
 void RBTree::remove(string key) {
+    int numKey = stoi(key);
     Node* z = root;
-    while (z && z->key != key) {
-        if (key < z->key) z = z->left;
+    while (z && stoi(z->key) != numKey) {
+        if (numKey < stoi(z->key)) z = z->left;
         else z = z->right;
     }
     if (!z) return;
@@ -212,28 +219,44 @@ void RBTree::savePreOrderHelper(Node* node, string& out) {
 
 void RBTree::savePreOrder(string& out) { savePreOrderHelper(root, out); }
 
-
-void RBTree::printHelper(Node* node, int space) {
+void RBTree::preOrderHelper(Node* node) {
     if (!node) return;
-
-    space += 5;
-
-    printHelper(node->right, space);
-
-    cout << endl;
-    for (int i = 5; i < space; i++) cout << " ";
-    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ")";
-
-    printHelper(node->left, space);
+    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
+    preOrderHelper(node->left);
+    preOrderHelper(node->right);
 }
 
-void RBTree::print() {
-    if (!root) { 
-        cout << "-> EMPTY" << endl; 
-        return; 
-    }
-    
-    cout << "-> ";
-    printHelper(root, 0);
+void RBTree::inOrderHelper(Node* node) {
+    if (!node) return;
+    inOrderHelper(node->left);
+    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
+    inOrderHelper(node->right);
+}
+
+void RBTree::postOrderHelper(Node* node) {
+    if (!node) return;
+    postOrderHelper(node->left);
+    postOrderHelper(node->right);
+    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
+}
+
+void RBTree::printPreOrder() {
+    if (!root) { cout << "-> EMPTY" << endl; return; }
+    cout << "-> PreOrder:  ";
+    preOrderHelper(root);
+    cout << endl;
+}
+
+void RBTree::printInOrder() {
+    if (!root) { cout << "-> EMPTY" << endl; return; }
+    cout << "-> InOrder:   ";
+    inOrderHelper(root);
+    cout << endl;
+}
+
+void RBTree::printPostOrder() {
+    if (!root) { cout << "-> EMPTY" << endl; return; }
+    cout << "-> PostOrder: ";
+    postOrderHelper(root);
     cout << endl;
 }

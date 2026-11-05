@@ -109,6 +109,9 @@ public:
             else if (action == "INSERT") { t->insert(arg1); isModified = true; }
             else if (action == "GET" && printResult) cout << "-> " << (t->find(arg1) ? "TRUE" : "FALSE") << endl;
             else if (action == "DEL") { t->remove(arg1); isModified = true; }
+            else if (action == "PREORDER" && printResult) t->printPreOrder();
+            else if (action == "INORDER" && printResult) t->printInOrder();
+            else if (action == "POSTORDER" && printResult) t->printPostOrder();
         }
         else if (cmd == "PRINT" && printResult) {
             if (arrays.count(name) && arrays[name]) {
@@ -118,7 +121,7 @@ public:
             }
             else if (flists.count(name) && flists[name]) flists[name]->print();
             else if (dlists.count(name) && dlists[name]) dlists[name]->print();
-            else if (trees.count(name) && trees[name]) trees[name]->print();
+            else if (trees.count(name) && trees[name]) trees[name]->printInOrder(); // Исправлено: без двойного InOrder
             else if (stacks.count(name) && stacks[name]) stacks[name]->print();
             else if (queues.count(name) && queues[name]) queues[name]->print();
             else cout << "-> NOT FOUND" << endl;
@@ -141,6 +144,7 @@ int main(int argc, char* argv[]) {
         if (arg == "--file" && i + 1 < argc) { filename = argv[i + 1]; i++; }
         else if (arg == "--query" && i + 1 < argc) { query = argv[i + 1]; i++; }
     }
+    
     DBMS db;
     if (!filename.empty()) {
         ifstream file(filename);
@@ -148,7 +152,11 @@ int main(int argc, char* argv[]) {
         while (getline(file, line)) if (!line.empty()) db.executeQuery(line, false, true);
         file.close();
     }
+    
     if (!query.empty()) db.executeQuery(query, true, query.find("PRINT") != 0);
-    if (!filename.empty()) db.saveToFile(filename);
+    
+    if (!filename.empty()) {
+        db.saveToFile(filename);
+    }
     return 0;
 }
