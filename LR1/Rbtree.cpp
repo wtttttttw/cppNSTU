@@ -212,11 +212,9 @@ void RBTree::savePreOrderHelper(Node* node, string& out) {
 
 void RBTree::savePreOrder(string& out) { savePreOrderHelper(root, out); }
 
-// ИЗМЕНЕНО: Добавлен вывод цвета
 void RBTree::printHelper(Node* node) {
     if (!node) return;
     printHelper(node->left);
-    // Выводим ключ и букву цвета (R - красный, B - черный)
     cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
     printHelper(node->right);
 }
