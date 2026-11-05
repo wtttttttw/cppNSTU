@@ -24,7 +24,8 @@ private:
     Node* minimum(Node* node);
     void destroyTree(Node* node);
     void savePreOrderHelper(Node* node, string& out);
-    void printHelper(Node* node);
+    
+    void printHelper(Node* node, int space);
 
 public:
     RBTree();

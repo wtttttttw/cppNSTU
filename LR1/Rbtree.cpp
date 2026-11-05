@@ -212,16 +212,28 @@ void RBTree::savePreOrderHelper(Node* node, string& out) {
 
 void RBTree::savePreOrder(string& out) { savePreOrderHelper(root, out); }
 
-void RBTree::printHelper(Node* node) {
+
+void RBTree::printHelper(Node* node, int space) {
     if (!node) return;
-    printHelper(node->left);
-    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ") ";
-    printHelper(node->right);
+
+    space += 5;
+
+    printHelper(node->right, space);
+
+    cout << endl;
+    for (int i = 5; i < space; i++) cout << " ";
+    cout << node->key << "(" << (node->color == RED ? "R" : "B") << ")";
+
+    printHelper(node->left, space);
 }
 
 void RBTree::print() {
-    if (!root) { cout << "-> EMPTY" << endl; return; }
+    if (!root) { 
+        cout << "-> EMPTY" << endl; 
+        return; 
+    }
+    
     cout << "-> ";
-    printHelper(root);
+    printHelper(root, 0);
     cout << endl;
 }
