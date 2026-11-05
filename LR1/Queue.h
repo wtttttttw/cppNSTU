@@ -17,5 +17,5 @@ public:
     void push(string val);
     string pop();
     string peek();
-    void print();
+    void print(); // <-- ДОБАВЛЕНО
 };

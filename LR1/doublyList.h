@@ -23,6 +23,10 @@ public:
     void insert_after(string target, string val);
     void insert_before(string target, string val);
     void remove(string val);
+    void pop_front();
+    void pop_back();
+    void remove_after(string target);
+    void remove_before(string target);
     bool find(string val);
     void print();
     string get_first();

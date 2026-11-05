@@ -26,7 +26,7 @@ void MyArray::push_back(string val) {
 
 void MyArray::insert_at(int index, string val) {
     if (index < 0 || index > size) return;
-    push_back("");
+    push_back(""); // увеличиваем размер
     for (int i = size - 1; i > index; i--) data[i] = data[i - 1];
     data[index] = val;
 }

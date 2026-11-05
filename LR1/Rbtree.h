@@ -35,5 +35,5 @@ public:
     bool find(string key);
     void remove(string key);
     void savePreOrder(string& out);
-    void print();
+    void print(); // <-- Метод для вывода
 };
