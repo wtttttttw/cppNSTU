@@ -169,7 +169,6 @@ void RBTree::fixDelete(Node* x) {
     if (x) x->color = BLACK;
 }
 
-// ИЗМЕНЕНО: Удаление с поиском как чисел
 void RBTree::remove(string key) {
     int numKey = stoi(key);
     Node* z = root;
