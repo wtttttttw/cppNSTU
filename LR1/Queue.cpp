@@ -36,6 +36,7 @@ string MyQueue::peek() {
     return data[head];
 }
 
+// <-- ДОБАВЛЕНО: Вывод от головы к хвосту
 void MyQueue::print() {
     if (head == tail) {
         cout << "-> EMPTY" << endl;
