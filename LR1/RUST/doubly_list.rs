@@ -91,6 +91,64 @@ impl DoubleList {
         }
     }
 
+    pub fn pop_front(&mut self) {
+        if let Some(old) = self.head.take() {
+            self.head = old.borrow().next.clone();
+            if let Some(new_head) = &self.head { new_head.borrow_mut().prev = None; }
+            else { self.tail = None; }
+        }
+    }
+
+    pub fn pop_back(&mut self) {
+        if let Some(old) = self.tail.take() {
+            self.tail = old.borrow().prev.clone();
+            if let Some(new_tail) = &self.tail { new_tail.borrow_mut().next = None; }
+            else { self.head = None; }
+        }
+    }
+
+    pub fn remove_after(&mut self, target: String) {
+        let mut current = self.head.clone();
+        while let Some(node) = current {
+            if node.borrow().value == target {
+                let next_opt = node.borrow().next.clone();
+                if let Some(to_remove) = next_opt {
+                    let after_remove = to_remove.borrow().next.clone();
+                    node.borrow_mut().next = after_remove.clone();
+                    if let Some(after) = after_remove {
+                        after.borrow_mut().prev = Some(node.clone());
+                    } else {
+                        self.tail = Some(node.clone());
+                    }
+                }
+                return;
+            }
+            let next_node = node.borrow().next.clone();
+            current = next_node;
+        }
+    }
+
+    pub fn remove_before(&mut self, target: String) {
+        let mut current = self.head.clone();
+        while let Some(node) = current {
+            if node.borrow().value == target {
+                let prev_opt = node.borrow().prev.clone();
+                if let Some(to_remove) = prev_opt {
+                    let before_remove = to_remove.borrow().prev.clone();
+                    node.borrow_mut().prev = before_remove.clone();
+                    if let Some(before) = before_remove {
+                        before.borrow_mut().next = Some(node.clone());
+                    } else {
+                        self.head = Some(node.clone());
+                    }
+                }
+                return;
+            }
+            let next_node = node.borrow().next.clone();
+            current = next_node;
+        }
+    }
+
     pub fn find(&self, val: String) -> bool {
         let mut current = self.head.clone();
         while let Some(node) = current {

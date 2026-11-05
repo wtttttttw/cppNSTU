@@ -19,9 +19,7 @@ impl ForwardList {
 
     pub fn push_back(&mut self, val: String) {
         let mut current = &mut self.head;
-        while let Some(ref mut node) = *current { 
-            current = &mut node.next; 
-        }
+        while let Some(ref mut node) = *current { current = &mut node.next; }
         *current = Some(Box::new(Node { value: val, next: None }));
     }
 
@@ -38,10 +36,7 @@ impl ForwardList {
 
     pub fn insert_before(&mut self, target: String, val: String) {
         if let Some(ref head_node) = self.head {
-            if head_node.value == target { 
-                self.push_front(val); 
-                return; 
-            }
+            if head_node.value == target { self.push_front(val); return; }
         }
         let mut current = &mut self.head;
         while let Some(ref mut node) = *current {
@@ -72,6 +67,61 @@ impl ForwardList {
         }
     }
 
+    pub fn pop_front(&mut self) {
+        if let Some(mut node) = self.head.take() {
+            self.head = node.next.take();
+        }
+    }
+
+    pub fn pop_back(&mut self) {
+        if self.head.is_none() { return; }
+        if self.head.as_ref().unwrap().next.is_none() {
+            self.head = None;
+            return;
+        }
+        let mut current = &mut self.head;
+        while let Some(ref mut node) = *current {
+            if node.next.as_ref().map_or(false, |n| n.next.is_none()) {
+                node.next = None;
+                return;
+            }
+            current = &mut node.next;
+        }
+    }
+
+    pub fn remove_after(&mut self, target: String) {
+        let mut current = &mut self.head;
+        while let Some(ref mut node) = *current {
+            if node.value == target {
+                if let Some(mut next_node) = node.next.take() {
+                    node.next = next_node.next.take();
+                }
+                return;
+            }
+            current = &mut node.next;
+        }
+    }
+
+    pub fn remove_before(&mut self, target: String) {
+        if self.head.is_none() || self.head.as_ref().unwrap().value == target { return; }
+        if self.head.as_ref().unwrap().next.as_ref().map_or(false, |n| n.value == target) {
+            self.pop_front();
+            return;
+        }
+        let mut current = &mut self.head;
+        while let Some(ref mut node) = *current {
+            if let Some(ref mut next_node) = node.next {
+                if let Some(ref next_next) = next_node.next {
+                    if next_next.value == target {
+                        node.next = next_node.next.take();
+                        return;
+                    }
+                }
+            }
+            current = &mut node.next;
+        }
+    }
+
     pub fn find(&self, val: String) -> bool {
         let mut current = &self.head;
         while let Some(ref node) = *current {
@@ -83,10 +133,7 @@ impl ForwardList {
 
     pub fn print(&self) {
         let mut current = &self.head;
-        if current.is_none() { 
-            println!("-> EMPTY"); 
-            return; 
-        }
+        if current.is_none() { println!("-> EMPTY"); return; }
         print!("-> ");
         while let Some(ref node) = *current {
             print!("{} ", node.value);
@@ -102,10 +149,7 @@ impl ForwardList {
     pub fn get_last(&self) -> String {
         let mut current = &self.head;
         let mut last = "EMPTY".to_string();
-        while let Some(node) = current { 
-            last = node.value.clone(); 
-            current = &node.next; 
-        }
+        while let Some(node) = current { last = node.value.clone(); current = &node.next; }
         last
     }
 }

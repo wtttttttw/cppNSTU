@@ -62,6 +62,10 @@ impl DBMS {
                     "INSERTAFTER" => fl.insert_after(a1.to_string(), a2.to_string()),
                     "INSERTBEFORE" => fl.insert_before(a1.to_string(), a2.to_string()),
                     "DEL" => fl.remove(a1.to_string()),
+                    "DELHEAD" => fl.pop_front(),
+                    "DELTAIL" => fl.pop_back(),
+                    "DELAFTER" => fl.remove_after(a1.to_string()),
+                    "DELBEFORE" => fl.remove_before(a1.to_string()),
                     "GET" => if !load { println!("-> {}", if fl.find(a1.to_string()) { "TRUE" } else { "FALSE" }) },
                     "GETFIRST" => if !load { println!("-> {}", fl.get_first()) },
                     "GETLAST" => if !load { println!("-> {}", fl.get_last()) },
@@ -76,6 +80,10 @@ impl DBMS {
                     "INSERTAFTER" => dl.insert_after(a1.to_string(), a2.to_string()),
                     "INSERTBEFORE" => dl.insert_before(a1.to_string(), a2.to_string()),
                     "DEL" => dl.remove(a1.to_string()),
+                    "DELHEAD" => dl.pop_front(),
+                    "DELTAIL" => dl.pop_back(),
+                    "DELAFTER" => dl.remove_after(a1.to_string()),
+                    "DELBEFORE" => dl.remove_before(a1.to_string()),
                     "GET" => if !load { println!("-> {}", if dl.find(a1.to_string()) { "TRUE" } else { "FALSE" }) },
                     "GETFIRST" => if !load { println!("-> {}", dl.get_first()) },
                     "GETLAST" => if !load { println!("-> {}", dl.get_last()) },
@@ -142,7 +150,13 @@ fn main() {
                query.starts_with("MPUSH") || query.starts_with("FPUSH") || 
                query.starts_with("LPUSH") || query.starts_with("MDEL") || 
                query.starts_with("FDEL") || query.starts_with("LDEL") ||
-               query.starts_with("SPOP") || query.starts_with("QPOP") {
+               query.starts_with("SPOP") || query.starts_with("QPOP") ||
+               query.starts_with("FDELHEAD") || query.starts_with("FDELTAIL") ||
+               query.starts_with("FDELAFTER") || query.starts_with("FDELBEFORE") ||
+               query.starts_with("LDELHEAD") || query.starts_with("LDELTAIL") ||
+               query.starts_with("LDELAFTER") || query.starts_with("LDELBEFORE") ||
+               query.starts_with("MINSERT") || query.starts_with("MSET") ||
+               query.starts_with("FINSERT") || query.starts_with("LINSERT") {
                 let _ = writeln!(f, "{}", query);
             }
         }
