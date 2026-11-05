@@ -121,7 +121,7 @@ public:
             }
             else if (flists.count(name) && flists[name]) flists[name]->print();
             else if (dlists.count(name) && dlists[name]) dlists[name]->print();
-            else if (trees.count(name) && trees[name]) trees[name]->printInOrder(); // Исправлено: без двойного InOrder
+            else if (trees.count(name) && trees[name]) trees[name]->printInOrder();
             else if (stacks.count(name) && stacks[name]) stacks[name]->print();
             else if (queues.count(name) && queues[name]) queues[name]->print();
             else cout << "-> NOT FOUND" << endl;
