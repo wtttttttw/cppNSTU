@@ -33,7 +33,6 @@ string MyStack::peek() {
     return data[size - 1];
 }
 
-// ИСПРАВЛЕНО: вывод всего стека от вершины к дну
 void MyStack::print() {
     if (size == 0) {
         cout << "-> EMPTY" << endl;
