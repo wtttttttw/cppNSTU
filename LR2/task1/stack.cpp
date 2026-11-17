@@ -1,9 +1,10 @@
 #include "stack.h"
+
 template <typename T>
 MyStack<T>::MyStack() : data(nullptr), size(0), capacity(0) {}
 
 template <typename T>
-MyStack<T>::~MyStack() { if (data) delete[] data }
+MyStack<T>::~MyStack() { if (data) delete[] data; }
 
 template <typename T>
 void MyStack<T>::create() {
@@ -19,7 +20,7 @@ void MyStack<T>::push(const T& val) {
     if (size == capacity) {
         capacity *= 2;
         T* newData = new T[capacity];
-        for (int i = 0; i < size; i++) newData[i] = data [i];
+        for (int i = 0; i < size; i++) newData[i] = data[i];
         delete[] data;
         data = newData;
     }
@@ -27,7 +28,7 @@ void MyStack<T>::push(const T& val) {
 }
 
 template <typename T>
-T MyStack<T>::pop(){
+T MyStack<T>::pop() {
     if (size == 0) return T();
     return data[--size];
 }
@@ -39,15 +40,10 @@ T MyStack<T>::peek() const {
 }
 
 template <typename T>
-T MyStack<T>::print() const {
-    if (size == 0) {
-        cout << "-> EMPTY" << endl;
-        return;
-    }
+void MyStack<T>::print() const {
+    if (size == 0) { cout << "-> EMPTY" << endl; return; }
     cout << "-> ";
-    for (int i = size - 1; i >= 0; i--) {
-        cout << data[i] << " ";
-    }
+    for (int i = size - 1; i >= 0; i--) cout << data[i] << " ";
     cout << endl;
 }
 

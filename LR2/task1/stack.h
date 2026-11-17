@@ -4,7 +4,7 @@
 using namespace std;
 
 template <typename T>
-class MyStack{
+class MyStack {
 private:
     T* data;
     int size;
