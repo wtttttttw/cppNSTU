@@ -4,8 +4,6 @@
 #include "array.h"
 using namespace std;
 
-// Парсинг строки в long long.
-// ok = true, если строка целиком является целым числом.
 static long long parse_ll(const string& s, bool& ok) {
     if (s.empty()) { ok = false; return 0; }
     char* end = nullptr;
@@ -14,8 +12,6 @@ static long long parse_ll(const string& s, bool& ok) {
     return ok ? v : 0;
 }
 
-// Находит и выводит все подмассивы arr с суммой target.
-// O(n^2) по времени, O(1) дополнительной памяти.
 static void find_subarrays_with_sum(MyArray& arr, long long target) {
     int n = arr.length();
     int found = 0;
@@ -26,13 +22,13 @@ static void find_subarrays_with_sum(MyArray& arr, long long target) {
         for (int r = l; r < n; r++) {
             bool ok;
             long long v = parse_ll(arr.get(r), ok);
-            if (!ok) break;   // нечисло — прерываем этот подмассив
+            if (!ok) break;
 
             sum += v;
 
             if (sum == target) {
                 found++;
-                cout << "Подмассив [" << l << ".." << r << "]: [";
+                cout << "РџРѕРґРјР°СЃСЃРёРІ [" << l << ".." << r << "]: [";
                 for (int k = l; k <= r; k++) {
                     cout << arr.get(k);
                     if (k < r) cout << ", ";
@@ -43,12 +39,11 @@ static void find_subarrays_with_sum(MyArray& arr, long long target) {
     }
 
     if (found == 0)
-        cout << "Подмассивов с суммой " << target << " не найдено.\n";
+        cout << "РџРѕРґРјР°СЃСЃРёРІРѕРІ СЃ СЃСѓРјРјРѕР№ " << target << " РЅРµ РЅР°Р№РґРµРЅРѕ.\n";
     else
-        cout << "Всего найдено: " << found << "\n";
+        cout << "Р’СЃРµРіРѕ РЅР°Р№РґРµРЅРѕ: " << found << "\n";
 }
 
-// Заполнение MyArray целыми числами из C-массива
 static void fill_array(MyArray& arr, const int* nums, int count) {
     arr.create();
     for (int i = 0; i < count; i++) {
@@ -68,16 +63,15 @@ static void print_array(MyArray& arr) {
 int main() {
     MyArray arr;
 
-    // Пример из задания
     int nums[] = {4, -7, 1, 5, -4, 0, -3, 2, 4, 1};
     int count = sizeof(nums) / sizeof(nums[0]);
     long long target = 5;
 
     fill_array(arr, nums, count);
 
-    cout << "Массив: ";
+    cout << "РњР°СЃСЃРёРІ: ";
     print_array(arr);
-    cout << "\nЦель: " << target << "\n\n";
+    cout << "\nР¦РµР»СЊ: " << target << "\n\n";
 
     find_subarrays_with_sum(arr, target);
 
