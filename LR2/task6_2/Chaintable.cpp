@@ -27,7 +27,6 @@ int Chaintable::hashFunc(const string& key) {
 void Chaintable::insert(const string& key, const string& value) {
     int index = hashFunc(key);
     
-    // Ищем, есть ли уже такой ключ
     ForwardList& list = *buckets[index];
     ForwardList temp;
     
@@ -40,7 +39,6 @@ void Chaintable::insert(const string& key, const string& value) {
         
         string prefix = key + ":";
         if (first.substr(0, prefix.length()) == prefix) {
-            // Если нашли ключ — добавляем значение через запятую
             temp.push_front(first + "," + value);
             found = true;
         } else {
@@ -52,7 +50,6 @@ void Chaintable::insert(const string& key, const string& value) {
         temp.push_front(key + ":" + value);
     }
     
-    // Возвращаем обратно
     while (true) {
         string first = temp.get_first();
         if (first == "EMPTY") break;
