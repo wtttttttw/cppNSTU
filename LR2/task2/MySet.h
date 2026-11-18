@@ -20,7 +20,9 @@ public:
     ~MySet();
 
     void create();
-    void set_add(const string& val);
-    void set_del(const string& val);
+    bool set_add(const string& val);
+    bool set_del(const string& val);
     bool set_at(const string& val) const;
+    
+    void print() const;
 };
