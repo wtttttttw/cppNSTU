@@ -27,7 +27,7 @@ void runBenchmark(int numElements) {
     // ==========================================
     // 1. МЕТОД ЦЕПОЧЕК (Load Factor = 1.0 - нормально)
     // ==========================================
-    int chainSize = numElements; // 1 элемент на 1 бакет
+    int chainSize = numElements;
     Chaintable chain(chainSize);
     
     auto start = high_resolution_clock::now();
@@ -43,7 +43,7 @@ void runBenchmark(int numElements) {
     // ==========================================
     // 2. КУКУШКА (Load Factor = 0.25 - безопасно)
     // ==========================================
-    int cuckooSize = numElements * 4; // В 4 раза больше элементов!
+    int cuckooSize = numElements * 4;
     Cuckootable cuckoo(cuckooSize); 
     
     start = high_resolution_clock::now();
