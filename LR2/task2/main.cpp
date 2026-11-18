@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 #include <map>
-#include <vector>
 #include "MySet.h"
 
 using namespace std;
@@ -11,49 +10,21 @@ using namespace std;
 class DBMS {
 private:
     map<string, MySet*> sets;
-    map<string, vector<string>> storage_log;
 
 public:
     ~DBMS() {
         for (auto& p : sets) delete p.second;
     }
 
-    void loadFromFile(const string& filename) {
-        ifstream file(filename);
-        if (!file.is_open()) return;
-
-        string line, cmd, name, arg;
-        while (getline(file, line)) {
-            stringstream ss(line);
-            if (ss >> cmd >> name >> arg) {
-                if (!sets[name]) sets[name] = new MySet();
-                if (cmd == "SETADD") {
-                    sets[name]->set_add(arg);
-                    storage_log[name].push_back("SETADD " + arg);
-                } else if (cmd == "SETDEL") {
-                    sets[name]->set_del(arg);
-                    storage_log[name].push_back("SETDEL " + arg);
-                }
-            }
-        }
-    }
-
-    void saveToFile(const string& filename) {
-        ofstream file(filename);
-        for (auto const& [name, log] : storage_log) {
-            for (const string& cmd : log) {
-                file << cmd.substr(0, 6) << " " << name << " " << cmd.substr(7) << "\n";
-            }
-        }
-    }
-
-    void executeQuery(const string& query) {
-        if (query.empty()) return;
+    bool executeQuery(const string& query, bool printResult = true) {
+        if (query.empty()) return false;
 
         stringstream ss(query);
         string cmd, name, arg;
         ss >> cmd >> name >> arg;
-        if (cmd.empty()) return;
+        if (cmd.empty()) return false;
+
+        bool isModified = false;
 
         if (cmd == "SETADD" || cmd == "SETDEL" || cmd == "SET_AT") {
             if (!sets[name]) sets[name] = new MySet();
@@ -61,27 +32,49 @@ public:
 
             if (cmd == "SETADD") {
                 s->set_add(arg);
-                storage_log[name].push_back("SETADD " + arg);
-                cout << "-> OK (Added " << arg << " to " << name << ")" << endl;
+                if (printResult) cout << "-> OK" << endl;
+                isModified = true;
             }
             else if (cmd == "SETDEL") {
                 s->set_del(arg);
-                storage_log[name].push_back("SETDEL " + arg);
-                cout << "-> OK (Deleted " << arg << " from " << name << ")" << endl;
+                if (printResult) cout << "-> OK" << endl;
+                isModified = true;
             }
             else if (cmd == "SET_AT") {
-                cout << "-> " << (s->set_at(arg) ? "TRUE" : "FALSE") << endl;
+                if (printResult) {
+                    cout << "-> " << (s->set_at(arg) ? "TRUE" : "FALSE") << endl;
+                }
             }
         }
         else {
-            cout << "-> ERROR: Unknown command" << endl;
+            if (printResult) cout << "-> ERROR: Unknown command" << endl;
+        }
+
+        return isModified;
+    }
+
+    void loadFromFile(const string& filename) {
+        ifstream file(filename);
+        if (!file.is_open()) return;
+
+        string line;
+        while (getline(file, line)) {
+            if (!line.empty()) executeQuery(line, false);
+        }
+        file.close();
+    }
+
+    void appendToFile(const string& filename, const string& query) {
+        ofstream file(filename, ios::app);
+        if (file.is_open()) {
+            file << query << endl;
+            file.close();
         }
     }
 };
 
 int main(int argc, char* argv[]) {
-    string filename = "db_state.txt";
-    string query = "";
+    string filename = "", query = "";
     
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
@@ -90,17 +83,18 @@ int main(int argc, char* argv[]) {
     }
 
     DBMS db;
-    
-    db.loadFromFile(filename);
 
-    if (!query.empty()) {
-        db.executeQuery(query);
-    } else {
-        cout << "No query provided. Use --query \"YOUR_COMMAND\"" << endl;
-        return 0;
+    if (!filename.empty()) {
+        db.loadFromFile(filename);
     }
 
-    db.saveToFile(filename);
+    if (!query.empty()) {
+        bool modified = db.executeQuery(query, true);
+        
+        if (modified && !filename.empty()) {
+            db.appendToFile(filename, query);
+        }
+    }
 
     return 0;
 }
