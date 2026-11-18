@@ -1,39 +1,37 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include <set>
-#include <sstream>
 #include "Chaintable.h"
 
 using namespace std;
 
-static void splitSubs(const string& subs, string* out, int& n) {
-    n = 0;
-    if (subs == "NOT_FOUND" || subs.empty()) return;
+static vector<string> splitSubs(const string& subs) {
+    vector<string> out;
+    if (subs == "NOT_FOUND" || subs.empty()) return out;
     string cur;
     for (size_t i = 0; i <= subs.size(); i++) {
         if (i == subs.size() || subs[i] == ',') {
-            if (!cur.empty()) out[n++] = cur;
+            if (!cur.empty()) out.push_back(cur);
             cur.clear();
         } else {
             cur += subs[i];
         }
     }
+    return out;
 }
 
 static int countAllSubs(const string& emp, Chaintable& table, set<string>& visited) {
     if (visited.count(emp)) return 0;
     visited.insert(emp);
 
-    string raw = table.get(emp);
-    static string direct[256];
-    int n = 0;
-    splitSubs(raw, direct, n);
+    vector<string> direct = splitSubs(table.get(emp));
 
     int total = 0;
-    for (int i = 0; i < n; i++) {
-        if (direct[i] == emp) continue;
-        if (visited.count(direct[i])) continue;
-        total += 1 + countAllSubs(direct[i], table, visited);
+    for (const string& sub : direct) {
+        if (sub == emp) continue;
+        if (visited.count(sub)) continue;
+        total += 1 + countAllSubs(sub, table, visited);
     }
     return total;
 }
