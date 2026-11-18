@@ -1,18 +1,18 @@
 #pragma once
 #include <string>
 #include "linkedList.h"
+#include "MySet.h"
+#include "array.h"
 
 using namespace std;
 
 class SubsetPartitioner {
 private:
-    int* elements;
-    int  n;
+    MyArray elementsArr;
+    int n;
     ForwardList subsetA;
     ForwardList subsetB;
     int diff;
-
-    void clearElements();
 
 public:
     SubsetPartitioner();
